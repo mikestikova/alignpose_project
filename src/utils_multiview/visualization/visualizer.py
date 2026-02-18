@@ -155,7 +155,7 @@ class Visualizer:
         refined_pose_wm: structs.RigidTransform,
         debug: bool = False,
     ):
-        obj_path = f"scene_{scene.scene_id}_object_{cand_object.object_id}_{self.counter}"
+        obj_path = f"group_{scene.group_id}_scene_{scene.scene_id}_object_{cand_object.object_id}_{self.counter}"
         self.counter += 1
         output_path = os.path.join(self.path_to_store_vis, obj_path)
         os.makedirs(output_path, exist_ok=True)
