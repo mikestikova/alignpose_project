@@ -1,6 +1,6 @@
 {
     "refine_opts": {
-        "input_path": "/home/mikesann/data/inference/xyzibd_v_foundpose_vitl_layer18_xyz/foundpose-new-filtered-megapose-refined2-filtered_xyzibd-test_xyz.csv",
+        "input_path": "./data/inputs/xyzibd",
         "version": "refined_v1",
         "repre_version": "repre_v1",
         "object_dataset": "xyzibd",

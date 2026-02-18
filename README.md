@@ -20,8 +20,8 @@ This repository provides a pipeline to run multi-view featuremetric refinement o
 Download the code with the git submodules and navigate to the folder:
 
 ```bash
-git clone --recurse-submodules https://github.com/mikestikova/alignpose.git
-cd alignpose
+git clone --recurse-submodules https://github.com/mikestikova/alignpose_project.git
+cd alignpose_project
 ```
 
 Setup the [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html) environment for CUDA:
@@ -42,7 +42,7 @@ Edit the ```env_vars.sh``` file as follows:
 ```bash
 #!/bin/sh
 
-export REPO_PATH=/path/to/foundpose/repository  # Replace with the path to the FoundPose repository.
+export REPO_PATH=/path/to/alignpose/repository  # Replace with the path to the AlignPose repository.
 export BOP_PATH=/path/to/bop/datasets  # Replace with the path to BOP datasets (https://bop.felk.cvut.cz/datasets).
 
 export PYTHONPATH=$REPO_PATH:$REPO_PATH/external/bop_toolkit:$REPO_PATH/external/dinov2:$REPO_PATH/external/pixloc

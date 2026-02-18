@@ -1,6 +1,6 @@
 {
     "refine_opts": {
-        "input_path": "/home/mikesann/data/inference/tless_experiments/single_view/co-op-f3dt2d-5-hypo_tless-test_24cbfb3f-8eb1-46f5-9a39-f88b3818def4.csv",
+        "input_path": "./data/inputs/tless/co-op-f3dt2d-5-hypo_tless-test_24cbfb3f-8eb1-46f5-9a39-f88b3818def4.csv",
         "version": "refined_v1",
         "repre_version": "repre_v1",
         "object_dataset": "tless",

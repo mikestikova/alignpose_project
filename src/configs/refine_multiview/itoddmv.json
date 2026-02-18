@@ -1,6 +1,6 @@
 {
     "refine_opts": {
-        "input_path": "/home/mikesann/data/inference/itodd_experiments/itoddmv_downloaded/3pt-cleaned-pose-nov-2025_itoddmv-test_88940ec7-0b89-4dee-adfc-536c0cf40cdf.csv",
+        "input_path": "./data/inputs/itoddmv",
         "version": "refined_v1",
         "repre_version": "repre_v1",
         "object_dataset": "itoddmv",

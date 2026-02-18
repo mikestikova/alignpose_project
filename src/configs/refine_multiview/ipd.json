@@ -1,6 +1,6 @@
 {
     "refine_opts": {
-        "input_path": "/home/mikesann/data/inference/ipd_preds_extra",
+        "input_path": "./data/inputs/ipd",
         "version": "refined_v1",
         "repre_version": "repre_v1",
         "object_dataset": "ipd",
