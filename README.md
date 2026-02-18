@@ -60,8 +60,6 @@ In addition to the test images, this method needs a specification of which views
 - BOP Industrial (IPD, XYZIBD, ITODDMV) contain `test_targets_multiview_bop25.json` folder.
 - BOP Classic Core (YCBV, TLESS) do not contain this folder so we provide it in `bop_test_targets/{dataset}/test_targets_multiview_bop25.json`. These files were generated for 4-view setup.  
 
-For custom dataset follow the setup in 
-
 ## Running Alignpose<a name="alignpose"></a>
 Currently we support BOP datasets from BOP-Industrial track (ITODD-MV, XYZ-IBD, IPD) and selected datasets from BOP-Classic (YCBV, T-LESS).
 
