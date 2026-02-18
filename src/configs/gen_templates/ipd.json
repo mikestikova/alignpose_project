@@ -1,0 +1,26 @@
+{
+    "gen_templates_opts": {
+        "version": "templates_v1",
+        "object_dataset": "ipd",
+        "object_lids": [
+            0,
+            1,
+            4,
+            8,
+            10,
+            11,
+            14,
+            18,
+            19,
+            20
+        ],
+        "min_num_viewpoints": 57,
+        "num_inplane_rotations": 14,
+        "crop": true,
+        "crop_rel_pad": 0.3,
+        "crop_size": [
+            420,
+            420
+        ]
+    }
+}

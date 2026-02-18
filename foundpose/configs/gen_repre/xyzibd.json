@@ -1,0 +1,28 @@
+{
+    "gen_repre_opts": {
+        "version": "v_foundpose_vitl_layer18",
+        "templates_version": "v1",
+        "object_dataset": "xyzibd",
+        "object_lids": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17
+        ],
+        "extractor_name": "dinov2_version=vitl14-reg_stride=14_facet=token_layer=18_logbin=0_norm=1",
+        "grid_cell_size": 14.0,
+        "apply_pca": true,
+        "pca_components": 256,
+        "cluster_features": true,
+        "cluster_num": 2048,
+        "template_desc_opts": {
+            "desc_type": "tfidf"
+        }
+    }
+}

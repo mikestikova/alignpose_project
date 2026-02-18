@@ -1,0 +1,20 @@
+{
+    "refine_opts": {
+        "input_path": "/home/mikesann/data/inference/ycbv_experiments/single_view/co-op-f3dt2d-5-hypo_ycbv-test_1dc3603b-a1ac-48d6-9b91-63ec4b699f6a.csv",
+        "version": "refined_v1",
+        "repre_version": "repre_v1",
+        "object_dataset": "ycbv",
+        "extractor_name": "dinov2_version=vitl14-reg_stride=14_facet=token_layer=18_logbin=0_norm=1",
+        "grid_cell_size": 14.0,
+        "crop_size": [
+            420,
+            420
+        ],
+        "crop_rel_pad": 0.2,
+        "loss_fn": "scaled_barron(-5, 0.5)",
+        "num_iters": 30,
+        "nms": true,
+        "nms_threshold": 0.4,
+        "vis_results": false
+    }
+}

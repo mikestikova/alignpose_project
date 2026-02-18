@@ -1,0 +1,22 @@
+{
+    "gen_repre_opts": {
+        "version": "repre_v1",
+        "templates_version": "templates_v1",
+        "object_dataset": "ipd",
+        "object_lids": [
+            0,
+            1,
+            4,
+            8,
+            10,
+            11,
+            14,
+            18,
+            19,
+            20
+        ],
+        "extractor_name": "dinov2_version=vitl14-reg_stride=14_facet=token_layer=18_logbin=0_norm=1",
+        "grid_cell_size": 14.0,
+        "pca_components": 256
+    }
+}

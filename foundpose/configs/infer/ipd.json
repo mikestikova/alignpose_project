@@ -1,0 +1,31 @@
+{
+    "infer_opts": {
+        "version": "v_foundpose_vitl_layer18",
+        "object_dataset": "ipd",
+        "repre_version": "v_foundpose_vitl_layer18",
+        "crop_rel_pad": 0.2,
+        "crop_size": [
+            420,
+            420
+        ],
+        "object_lids": [
+            0,
+            1
+        ],
+        "use_detections": true,
+        "extractor_name": "dinov2_version=vitl14-reg_stride=14_facet=token_layer=18_logbin=0_norm=1",
+        "grid_cell_size": 14.0,
+        "match_template_type": "tfidf",
+        "match_top_n_templates": 5,
+        "match_feat_matching_type": "cyclic_buddies",
+        "match_top_k_buddies": 300,
+        "pnp_type": "opencv",
+        "pnp_ransac_iter": 400,
+        "pnp_inlier_thresh": 10.0,
+        "final_pose_type": "refined",
+        "num_preds_factor": 1,
+        "vis_results": false,
+        "sensor": "photoneo",
+        "modality": "rgb"
+    }
+}

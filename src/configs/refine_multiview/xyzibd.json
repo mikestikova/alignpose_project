@@ -1,0 +1,20 @@
+{
+    "refine_opts": {
+        "input_path": "/home/mikesann/data/inference/xyzibd_v_foundpose_vitl_layer18_xyz/foundpose-new-filtered-megapose-refined2-filtered_xyzibd-test_xyz.csv",
+        "version": "refined_v1",
+        "repre_version": "repre_v1",
+        "object_dataset": "xyzibd",
+        "extractor_name": "dinov2_version=vitl14-reg_stride=14_facet=token_layer=18_logbin=0_norm=1",
+        "grid_cell_size": 14.0,
+        "crop_size": [
+            420,
+            420
+        ],
+        "crop_rel_pad": 0.2,
+        "loss_fn": "scaled_barron(-5, 0.5)",
+        "num_iters": 30,
+        "nms": true,
+        "nms_threshold": 0.4,
+        "vis_results": false
+    }
+}

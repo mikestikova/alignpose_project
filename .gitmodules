@@ -1,0 +1,9 @@
+[submodule "src/external/bop_toolkit"]
+	path = src/external/bop_toolkit
+	url = https://github.com/thodan/bop_toolkit.git
+[submodule "src/external/pixloc"]
+	path = src/external/pixloc
+	url = https://github.com/mikestikova/pixloc.git
+[submodule "src/external/dinov2"]
+	path = src/external/dinov2
+	url = git@github.com:facebookresearch/dinov2.git
