@@ -41,10 +41,10 @@ Edit the ```env_vars.sh``` file as follows:
 ```bash
 #!/bin/sh
 
-export REPO_PATH=/path/to/alignpose/repository  # Replace with the path to the AlignPose repository.
+export ALIGNPOSE=/path/to/alignpose/repository  # Replace with the path to the AlignPose repository.
 export BOP_PATH=/path/to/bop/datasets  # Replace with the path to BOP datasets (https://bop.felk.cvut.cz/datasets).
 
-export PYTHONPATH=$REPO_PATH:$REPO_PATH/external/bop_toolkit:$REPO_PATH/external/dinov2:$REPO_PATH/external/pixloc
+export PYTHONPATH=$ALIGNPOSE:$ALIGNPOSE/src/external/bop_toolkit:$ALIGNPOSE/src/external/dinov2:$ALIGNPOSE/src/external/pixloc
 ```
 
 Activate the conda environment:
