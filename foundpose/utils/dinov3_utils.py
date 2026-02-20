@@ -5,7 +5,6 @@ import typing as tp
 import torch
 import torch.nn as nn
 import torchvision.transforms as T
-from transformers import pipeline
 from transformers import AutoImageProcessor, AutoModel
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -14,7 +13,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class DINOv3FeatureExtractor(nn.Module):
     # REPO_DIR = (Path(os.path.dirname(__file__)).parent.parent.parent.parent / 'dinov3').resolve()
 
-    def __init__(self, model_name: str = "dinov3-vitl16-pretrain-lvd1689m"):
+    def __init__(self, model_name: str = "dinov3_version=vitl16_stride=16_facet=token_layer=18_norm=1"):
         super().__init__()
 
         # Default parameter values.
@@ -74,7 +73,7 @@ class DINOv3FeatureExtractor(nn.Module):
             images.shape[-1] == images.shape[-2]
             and images.shape[-1] % self.patch_size == 0
         ), (
-            f"Expected images to be square with size multiple of patch size {self.patch_size}. Found {images.shape[-2:]}"
+            f"Expected images to be square with size multiple of patch size {self.patch_size} (e.g. {[self.patch_size * 27, self.patch_size * 27]}). Found {images.shape[-2:]}"
         )
         assert images.dtype == torch.float32, (
             f"Expected images to be float32. Found {images.dtype}"

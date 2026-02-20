@@ -24,9 +24,6 @@ from foundpose.utils import (
     misc,
 )
 
-HF_HUB_OFFLINE = 1
-os.environ["TRANSFORMERS_OFFLINE"] = "1"
-
 
 def generate_feature_vectors(
     opts: GenRepreOpts,

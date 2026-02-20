@@ -1,4 +1,3 @@
-import enum
 from typing import List, Tuple
 import torch
 from foundpose.utils import misc
