@@ -25,8 +25,6 @@ from src.utils_multiview.data.prediction_utils import (
     save_bop_predictions_csv,
 )
 
-os.environ["PYOPENGL_PLATFORM"] = "egl"
-
 def run_refine_multiview(
     opts: RefineOpts,
 ):

@@ -67,12 +67,13 @@ def nms_3d(
         # calculate intersection volume
         box1 = highest_score_box[1]  # box part of the tuple
 
+        def safe_intersection_volume(box1, box2):
+            mesh = trimesh.boolean.intersection([box1, box2])
+            return mesh.volume if not mesh.is_empty and mesh.volume != 0 else 0.0
+
         intersection_volume = torch.tensor(
-            [
-                trimesh.boolean.intersection([box1, box2]).volume
-                for (_, box2) in prediction_boxes
-            ]
-        )  # box part of the tuple
+            [safe_intersection_volume(box1, box2) for (_, box2) in prediction_boxes]
+        )
 
         # if all boxes have zero intersection volume, remove this box and continue
         if torch.all(intersection_volume == 0):
