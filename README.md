@@ -1,5 +1,5 @@
 # AlignPose
-Featuremetric Multi-View Refinement for BOP Datasets
+Multi-View Object Pose Refinement for BOP Datasets
 
 This repository provides a pipeline to run multi-view featuremetric refinement on BOP (Benchmark for 6D Object Pose Estimation) datasets. It is designed for 6DoF object pose estimation from multiple views.
 
@@ -49,7 +49,7 @@ export PYTHONPATH=$ALIGNPOSE:$ALIGNPOSE/src/external/bop_toolkit:$ALIGNPOSE/src/
 
 Activate the conda environment:
 ```bash
-conda activate foundpose_gpu
+conda activate alignpose_gpu
 ```
 
 ### Dataset <a name="dataset"></a>
@@ -66,17 +66,17 @@ Currently we support BOP datasets from BOP-Industrial track (ITODD-MV, XYZ-IBD, 
 ### Generate templates:
 Specify your configs in `configs/gen_templates/ycbv.json` and run the template generation:
 ```bash
-python src/scripts/run_bop_gen_templates.py --opts-path configs/gen_templates/ycbv.json
+python src/scripts/run_bop_gen_templates.py --opts-path src/configs/gen_templates/ycbv.json
 ```
 
 ### Generate obejct representation
 Specify your configs in  `configs/gen_repre/ycbv.json` and generate PCA per-object representation:
 ```bash
-python src/scripts/run_bop_gen_repre.py --opts-path configs/gen_repre/ycbv.json
+python src/scripts/run_bop_gen_repre.py --opts-path src/configs/gen_repre/ycbv.json
 ```
 
 ### Prepare input pose estimates
-We provide some sample inputs in the `data/inputs` folder. Alternatively, you may download input pose estimate `.csv` files from [BOP Leaderboard](https://bop.felk.cvut.cz/leaderboards/pose-estimation-unseen-bop23/ycb-v/) or generate them with any single-view pose estimation method.
+Because this is a refinemet method, we need some coarse input poses that will be refined. We provide sample input poses in the `data/inputs` folder. Alternatively, you may download input poses `.csv` files from [BOP Leaderboard](https://bop.felk.cvut.cz/leaderboards/pose-estimation-unseen-bop23/ycb-v/) or generate them with any single-view pose estimation method.
 
 Format of input:
 - BOP Classic Core (YCB-V, T-LESS): One `.csv` file with predictions in BOP format.
