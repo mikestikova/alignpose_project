@@ -23,7 +23,7 @@
   <img src="images/alignpose_pipeline.png" width=80% alt="AlignPose pipeline overview" max-width=20px>
 </p>
 
-This repository contains code for AlignPose, our method for 6DoF object pose estimation from multiple views. It provides a pipeline to run multi-view featuremetric refinement for BOP (Benchmark for 6D Object Pose Estimation) datasets. 
+This repository contains code for AlignPose, our method for 6 object pose estimation from multiple views. It provides a pipeline to run multi-view featuremetric refinement for [BOP](https://bop.felk.cvut.cz/) datasets.
 
 ## Table of Contents
 
