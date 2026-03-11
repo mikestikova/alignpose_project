@@ -1,7 +1,29 @@
-# AlignPose
-Multi-View Object Pose Refinement for BOP Datasets
 
-This repository provides a pipeline to run multi-view featuremetric refinement on BOP (Benchmark for 6D Object Pose Estimation) datasets. It is designed for 6DoF object pose estimation from multiple views.
+<p align="center">
+  <h1 align="center">AlignPose: Generalizable 6D Pose Estimation via <br> Multi-view Feature-metric Alignment</h1>
+  <p align="center">
+    <a href="">Anna Šárová Mikeštíková</a>
+    ·
+    <a href="https://medericfourmy.github.io">Médéric Fourmy</a>
+    ·
+    <a href="https://cifkam.github.io">Martin Cífka</a>
+    ·
+    <a href="http://people.ciirc.cvut.cz/~sivic/">Josef Sivic</a>
+    .
+    <a href="https://petrikvladimir.github.io">Vladimir Petrik</a>
+  </p>
+  <h3 align="center">
+    <a href="https://arxiv.org/abs/2512.20538" align="center">Arxiv</a>
+    ·
+    <a href="https://mikestikova.github.io/alignpose/" align="center">Project Page</a>
+  </h3>
+</p>
+
+<p align="center">
+  <img src="images/alignpose_pipeline.png" width=80% alt="AlignPose pipeline overview" max-width=20px>
+</p>
+
+This repository contains code for AlignPose, our method for 6DoF object pose estimation from multiple views. It provides a pipeline to run multi-view featuremetric refinement for BOP (Benchmark for 6D Object Pose Estimation) datasets. 
 
 ## Table of Contents
 
@@ -57,20 +79,20 @@ Download the BOP datasets from [here](https://bop.felk.cvut.cz/datasets/).
 Note that we only need the `base` archive with the dataset info, `models` folder and `test` folder. Extract dataset to this [format.](https://github.com/thodan/bop_toolkit/blob/master/docs/bop_datasets_format.md)
 
 In addition to the test images, this method needs a specification of which views shoud be used together in the multi-view setup:
-- BOP Industrial (IPD, XYZIBD, ITODDMV) contain `test_targets_multiview_bop25.json` folder.
-- BOP Classic Core (YCBV, TLESS) do not contain this folder so we provide it in `bop_test_targets/{dataset}/test_targets_multiview_bop25.json`. These files were generated for 4-view setup.  
+- BOP Industrial (IPD, XYZIBD, ITODDMV) contain `test_targets_multiview_bop25.json` file.
+- BOP Classic Core (YCBV, TLESS) do not contain this file so we provide it in `data/bop_test_targets/{dataset}/test_targets_multiview_bop25.json`. These files were generated for 4-view setup.  
 
 ## Running Alignpose<a name="alignpose"></a>
-Currently we support BOP datasets from BOP-Industrial track (ITODD-MV, XYZ-IBD, IPD) and selected datasets from BOP-Classic (YCBV, T-LESS).
+Currently we support BOP datasets from BOP-Industrial track (ITODD-MV, XYZ-IBD, IPD) and selected datasets from BOP-Classic track (YCB-V, T-LESS).
 
 ### Generate templates:
-Specify your configs in `configs/gen_templates/ycbv.json` and run the template generation:
+Specify your configs in `src/configs/gen_templates/ycbv.json` and run the template generation:
 ```bash
 python src/scripts/run_bop_gen_templates.py --opts-path src/configs/gen_templates/ycbv.json
 ```
 
 ### Generate obejct representation
-Specify your configs in  `configs/gen_repre/ycbv.json` and generate PCA per-object representation:
+Specify your configs in  `src/configs/gen_repre/ycbv.json` and generate PCA per-object representation:
 ```bash
 python src/scripts/run_bop_gen_repre.py --opts-path src/configs/gen_repre/ycbv.json
 ```
