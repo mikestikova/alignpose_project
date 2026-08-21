@@ -88,13 +88,13 @@ Currently we support BOP datasets from BOP-Industrial track (ITODD-MV, XYZ-IBD, 
 ### Generate templates:
 Specify your configs in `src/configs/gen_templates/ycbv.json` and run the template generation:
 ```bash
-python src/scripts/run_bop_gen_templates.py --opts-path src/configs/gen_templates/ycbv.json
+python src/scripts/gen_templates.py --opts-path src/configs/gen_templates/ycbv.json
 ```
 
 ### Generate obejct representation
 Specify your configs in  `src/configs/gen_repre/ycbv.json` and generate PCA per-object representation:
 ```bash
-python src/scripts/run_bop_gen_repre.py --opts-path src/configs/gen_repre/ycbv.json
+python src/scripts/gen_repre.py --opts-path src/configs/gen_repre/ycbv.json
 ```
 
 ### Prepare input pose estimates
