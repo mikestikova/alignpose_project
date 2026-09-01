@@ -96,12 +96,12 @@ def synthesize_templates(opts: GenTemplatesOpts) -> None:
         datasets_path=datasets_path, dataset_name=opts.object_dataset, split="test"
     )
     # Get properties of the default camera for the specified dataset.
-    # bop_camera = dataset_params.get_camera_params(
-    #     datasets_path=datasets_path, dataset_name=opts.object_dataset
-    # )
-    bop_camera = inout.load_cam_params(
-        os.path.join(datasets_path, opts.object_dataset, "camera_xyz.json")
+    bop_camera = dataset_params.get_camera_params(
+        datasets_path=datasets_path, dataset_name=opts.object_dataset
     )
+    # bop_camera = inout.load_cam_params(
+    #     os.path.join(datasets_path, opts.object_dataset, "camera_xyz.json")
+    # )
     logger.info(f"Bop camera details are read ")
 
     print("Object lids: ", object_lids)
