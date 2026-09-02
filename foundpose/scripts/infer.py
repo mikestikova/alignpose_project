@@ -456,9 +456,9 @@ def infer(opts: InferOpts) -> None:
                         box=orig_box_amodal,
                         make_square=True,
                     )
-                    breakpoint()
+
                     # Construct a virtual camera focused on the crop.
-                     = misc_util.construct_crop_camera(
+                    crop_camera_model_c2w = misc_util.construct_crop_camera(
                         box=crop_box,
                         camera_model_c2w=orig_camera_c2w,
                         viewport_size=opts.crop_size,
