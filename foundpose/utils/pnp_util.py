@@ -61,6 +61,37 @@ def estimate_pose(
             inliers = None
             quality = None
         else:
+            # A solve that places the object behind the camera (z <= 0) reprojects
+            # exactly as well as the correct one, so RANSAC has no basis to prefer
+            # either and picks whichever branch the DLT initialisation landed on.
+            # Re-solving from a seed in front of the camera lands on the valid
+            # branch and keeps the same inliers. Only the depth sign of the seed
+            # matters -- the rotation seed makes no difference -- so this needs no
+            # pose prior. Correct solves never enter this branch.
+            if pose_est_success and float(np.asarray(t_est_m2c).ravel()[2]) <= 0.0:
+                seed_t = np.asarray(t_est_m2c, dtype=np.float64).reshape(3, 1).copy()
+                seed_t[2, 0] = abs(seed_t[2, 0]) or 1.0
+                retry_success, retry_rvec, retry_t, retry_inliers = (
+                    cv2.solvePnPRansac(
+                        objectPoints=object_points,
+                        imagePoints=image_points,
+                        cameraMatrix=K,
+                        distCoeffs=None,
+                        rvec=np.zeros((3, 1)),
+                        tvec=seed_t,
+                        useExtrinsicGuess=True,
+                        iterationsCount=pnp_ransac_iter,
+                        reprojectionError=pnp_inlier_thresh,
+                        confidence=pnp_required_ransac_conf,
+                        flags=cv2.SOLVEPNP_ITERATIVE,
+                    )
+                )
+                if retry_success and float(np.asarray(retry_t).ravel()[2]) > 0.0:
+                    pose_est_success = retry_success
+                    rvec_est_m2c = retry_rvec
+                    t_est_m2c = retry_t
+                    inliers = retry_inliers
+
             # Optional LM refinement on inliers.
             if pose_est_success and pnp_refine_lm:
                 rvec_est_m2c, t_est_m2c = cv2.solvePnPRefineLM(
