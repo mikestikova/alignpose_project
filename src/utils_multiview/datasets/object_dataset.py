@@ -69,20 +69,45 @@ class ObjectDataset():
             raise FileNotFoundError(f"Model file not found: {model_path}")
         return trimesh.load_mesh(model_path)
     
-    def load_representations(self, repre_version, device):
+    def load_representations(
+        self, repre_version, device, full: bool = False, output_root: str = None
+    ):
+        """Loads a representation for every object in the dataset.
+
+        Args:
+            repre_version: Version of the representation to load.
+            device: Device the projectors are placed on.
+            full: See `get_object_representation`.
+            output_root: Root holding `object_repre/` (default: `OUTPUT_DIR`).
+        """
         for object_id in self.object_ids:
-            repre = self.get_object_representation(object_id, repre_version, device)
+            repre = self.get_object_representation(
+                object_id, repre_version, device, full=full, output_root=output_root
+            )
             self.objects[object_id].representation = repre
 
-    def get_object_representation(self, object_id, repre_version, device):
-        base_repre_dir = os.path.join(OUTPUT_DIR, "object_repre")
+    def get_object_representation(
+        self, object_id, repre_version, device, full: bool = False, output_root: str = None
+    ):
+        """Loads one object's representation.
+
+        Args:
+            full: If False (default) only the PCA projectors are read, which is all
+                the multi-view refiner needs. Single-view coarse pose estimation
+                additionally needs the template cameras and the tf-idf descriptor
+                options, so it must pass True.
+            output_root: Root holding `object_repre/` (default: `OUTPUT_DIR`).
+        """
+        base_repre_dir = os.path.join(output_root or OUTPUT_DIR, "object_repre")
         repre_dir = repre_util.get_object_repre_dir_path(
             base_repre_dir, repre_version, self.dataset_name, object_id
         )
         repre = repre_util.load_object_repre(
             repre_dir=repre_dir,
             tensor_device=device,
-            load_fields=[
+            load_fields=None
+            if full
+            else [
                 "feat_raw_projectors",
                 "feat_vis_projectors",
             ],
@@ -93,7 +118,7 @@ class ObjectDataset():
                 f"Representation not found for object {object_id} in {repre_dir}"
             )
 
-        raw_projector = repre.feat_vis_projectors[0]
+        raw_projector = repre.feat_raw_projectors[0]
         raw_torch_projector = self._foundpose_projector_to_torchprojector(
             raw_projector, device
         )
