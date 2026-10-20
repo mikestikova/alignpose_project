@@ -35,6 +35,7 @@ This repository contains code for AlignPose, our method for 6 object pose estima
    - [Single view poses](#single_view_poses)
    - [Multi view refinement](#multi_view_poses)
    - [BOP evaluation](#bop-evaluation)
+- [Running Alignpose for custom objects](#alignpose_custom)
 - [Acknowledgements](#acknowledgements)
 - [License](#license)
 
@@ -137,6 +138,34 @@ Evaluate the BOP submission file by running this script.
 ```
 python src/scripts/results_evaluate_bop.py --csv_path  path/to/csv/results.csv
 ```
+
+
+
+## Running Alignpose for custom objects <a name="alignpose_custom"></a>
+This section describes how to run AlignPose on your own objects, without depending on BOP datasets.
+
+### Preprocess objects
+Each object needs a preprocessed representation. Object IDs must be unique.
+```bash
+python src/scripts/preprocess_objects.py \
+    --model-paths path/to/models/obj_000001.ply path/to/models/obj_000002.ply \
+    --object-ids 1 2 \
+    --output-dir object_repre/custom_dataset/repre_v1
+```
+Each representation is saved to `<output-dir>/<object-id>/repre.pth`. To use the representations in `refine_multiview.py`, save them to `object_repre/<object_dataset>/<repre_version>` and set `repre_version` in the refinement config to match.
+
+You can do the same from Python:
+```python
+from src.utils_multiview.processing.object_pca import fit_object_pca, save_object_pca
+
+repre = fit_object_pca("path/to/my_object.ply")
+save_object_pca(repre, "object_repre/custom_dataset/repre_v1", object_id=1)
+```
+
+### Run multi-view refinement
+Comming soon!
+
+
 
 
 ## Citation
