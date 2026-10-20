@@ -140,14 +140,12 @@ python scripts/results_bop_evaluate.py --csv_path  path/to/csv/results.csv
 If you find this code useful in your research, please cite:
 
 ```
-@misc{mikestikova2025alignpose,
-      title={AlignPose: Generalizable 6D Pose Estimation via Multi-view Feature-metric Alignment}, 
-      author={Anna Šárová Mikeštíková and Médéric Fourmy and Martin Cífka and Josef Sivic and Vladimir Petrik},
-      year={2025},
-      eprint={2512.20538},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2512.20538}, 
+@InProceedings{mikestikova2026alignpose,
+    author    = {Mike\v{s}t{\'\i}kov\'a, Anna \v{S}\'arov\'a and Fourmy, M\'ed\'eric and Cifka, Martin and Sivic, Josef and Petrik, Vladimir},
+    title     = {AlignPose: Generalizable 6D Pose Estimation via Multi-view Feature-metric Alignment},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    month     = {June},
+    year      = {2026}
 }
 ```
 
