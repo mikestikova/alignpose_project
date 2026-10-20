@@ -59,7 +59,7 @@ from foundpose.utils import data_util
 from src.utils_multiview.structs.data_structures import View
 from src.utils_multiview.datasets.scene_dataset import SceneDataset
 from src.utils_multiview.data.prediction_utils import df_world_to_camera_poses
-from utils_multiview.constants import BOP_DATASETS, BOP_DATASETS_PATH
+from src.utils_multiview.constants import BOP_DATASETS, BOP_DATASETS_PATH
 
 
 class CustomSceneDataset(SceneDataset):
