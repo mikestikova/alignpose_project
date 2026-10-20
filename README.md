@@ -158,8 +158,8 @@ You can do the same from Python:
 ```python
 from src.utils_multiview.processing.object_pca import fit_object_pca, save_object_pca
 
-repre = fit_object_pca("path/to/my_object.ply")
-save_object_pca(repre, "object_repre/custom_dataset/repre_v1", object_id=1)
+repre, config = fit_object_pca("path/to/my_object.ply")
+save_object_pca(repre, "object_repre/custom_dataset/repre_v1", object_id=1, config=config)
 ```
 
 ### Run multi-view refinement

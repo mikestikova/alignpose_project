@@ -7,8 +7,10 @@ from the object representation. This module renders template views in memory, ex
 features and fits the PCA, without writing template images to disk.
 """
 
+import inspect
+import json
 import os
-from typing import Iterator, Optional, Tuple
+from typing import Any, Dict, Iterator, Optional, Tuple
 
 import cv2
 import numpy as np
@@ -169,7 +171,7 @@ def fit_object_pca(
     pca_max_samples: int = 100000,
     seed: int = 0,
     **render_kwargs,
-) -> repre_util.FeatureBasedObjectRepre:
+) -> Tuple[repre_util.FeatureBasedObjectRepre, Dict[str, Any]]:
     """Fits the PCA of features extracted from rendered templates of one object.
 
     Args:
@@ -187,8 +189,27 @@ def fit_object_pca(
         seed: Random seed for subsampling the feature vectors and fitting the PCA.
         **render_kwargs: Options passed to `render_template_views`.
     Returns:
-        Object representation containing the fitted PCA projector.
+        Object representation containing the fitted PCA projector, and the configuration
+        used to fit it (including default rendering options), e.g. for `save_object_pca`.
     """
+
+    # Record all options used for fitting, including defaults of `render_template_views`.
+    render_defaults = {
+        name: param.default
+        for name, param in inspect.signature(render_template_views).parameters.items()
+        if param.default is not inspect.Parameter.empty and name != "renderer"
+    }
+    config = {
+        "model_path": model_path,
+        "extractor_name": extractor_name,
+        "grid_cell_size": grid_cell_size,
+        "pca_components": pca_components,
+        "pca_whiten": pca_whiten,
+        "pca_max_samples": pca_max_samples,
+        "seed": seed,
+        **render_defaults,
+        **render_kwargs,
+    }
 
     device = device or ("cuda" if torch.cuda.is_available() else "cpu")
     if extractor is None:
@@ -226,16 +247,20 @@ def fit_object_pca(
     )
     repre.feat_raw_projectors.append(pca_projector)
     repre.feat_vis_projectors = [pca_projector]
-    return repre
+    return repre, config
 
 
 def save_object_pca(
-    repre: repre_util.FeatureBasedObjectRepre, output_dir: str, object_id
+    repre: repre_util.FeatureBasedObjectRepre,
+    output_dir: str,
+    object_id,
+    config: Optional[Dict[str, Any]] = None,
 ) -> str:
     """Saves the representation to `<output_dir>/<object_id>/repre.pth`.
 
-    To use it in `src/scripts/refine_multiview.py`, set `output_dir` to
-    `<OUTPUT_DIR>/object_repre/<object_dataset>/<repre_version>`.
+    If `config` (returned by `fit_object_pca`) is given, it is saved next to it as
+    `config.json`. To use the representation in `src/scripts/refine_multiview.py`, set
+    `output_dir` to `<OUTPUT_DIR>/object_repre/<object_dataset>/<repre_version>`.
 
     Returns:
         Directory of the saved representation.
@@ -243,4 +268,7 @@ def save_object_pca(
     repre_dir = os.path.join(output_dir, str(object_id))
     os.makedirs(repre_dir, exist_ok=True)
     repre_util.save_simple_object_repre(repre, repre_dir)
+    if config is not None:
+        with open(os.path.join(repre_dir, "config.json"), "w") as f:
+            json.dump({"object_id": object_id, **config}, f, indent=2)
     return repre_dir

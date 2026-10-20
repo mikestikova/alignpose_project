@@ -50,7 +50,7 @@ def main() -> None:
 
     for object_id, model_path in zip(args.object_ids, args.model_paths):
         print(f"Fitting PCA for {model_path}...")
-        repre = fit_object_pca(
+        repre, config = fit_object_pca(
             model_path,
             extractor_name=args.extractor_name,
             extractor=extractor,
@@ -60,7 +60,7 @@ def main() -> None:
             min_num_viewpoints=args.min_num_viewpoints,
             num_inplane_rotations=args.num_inplane_rotations,
         )
-        repre_dir = save_object_pca(repre, args.output_dir, object_id)
+        repre_dir = save_object_pca(repre, args.output_dir, object_id, config=config)
         print(f"Saved to {repre_dir}")
 
 
