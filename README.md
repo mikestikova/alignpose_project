@@ -133,7 +133,7 @@ python src/scripts/refine_multiview.py --opts-path src/configs/refine_multiview/
 ### BOP Evaluation <a name="bop-evaluation"></a>
 Evaluate the BOP submission file by running this script.
 ```
-python scripts/results_bop_evaluate.py --csv_path  path/to/csv/results.csv
+python src/scripts/results_bop_evaluate.py --csv_path  path/to/csv/results.csv
 ```
 
 ## Citation
