@@ -13,6 +13,8 @@ def main(args):
         return
     
     eval_dir = Path(csv_path).parent
+    # The BOP toolkit joins `results_path` and the result file name, so pass only the name.
+    csv_name = Path(csv_path).name
 
     bop_path = os.path.dirname(bop_toolkit_lib.__file__).split("/bop_toolkit_lib")[0]
     script_ar = os.path.join(bop_path, "scripts", "eval_bop19_pose.py")
@@ -20,7 +22,7 @@ def main(args):
         "python", 
         script_ar, 
         "--renderer_type=vispy", 
-        f"--result_filenames={csv_path}",
+        f"--result_filenames={csv_name}",
         f"--results_path={eval_dir}",
         f"--eval_path={eval_dir}",
         f"--targets_filename=test_targets_bop19.json",
@@ -34,7 +36,7 @@ def main(args):
         "python", 
         script_ap, 
         "--renderer_type=vispy", 
-        f"--result_filenames={csv_path}",
+        f"--result_filenames={csv_name}",
         f"--results_path={eval_dir}",
         f"--eval_path={eval_dir}",
         f"--targets_filename=test_targets_bop19.json",
