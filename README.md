@@ -82,6 +82,23 @@ In addition to the test images, this method needs a specification of which views
 - BOP Industrial (IPD, XYZIBD, ITODDMV) contain `test_targets_multiview_bop25.json` file.
 - BOP Classic Core (YCBV, TLESS) do not contain this file so we provide it in `data/bop_test_targets/{dataset}/test_targets_multiview_bop25.json`. These files were generated for 4-view setup.  
 
+#### Fixing YCB-V camera poses
+The camera poses (`cam_R_w2c`, `cam_t_w2c`) in the YCB-V test split are not consistent with the ground-truth object poses: although the objects are static, their poses expressed in the world frame drift over time. Since multi-view refinement relies on the relative camera poses, these need to be fixed before running AlignPose on YCB-V.
+
+Recompute the camera poses by assuming the objects are static (object world poses are taken from the first frame of each scene). The fixed `scene_camera.json` files are saved to `data/ycbv/fixed_drift/{scene_id}/`; the original dataset is not modified:
+```bash
+python src/scripts/fix_ycbv_drift.py --bop-test-dir $BOP_PATH/ycbv/test --out-dir data/ycbv/fixed_drift
+```
+
+Then replace the original camera files in the dataset with the fixed ones (the originals are kept as `scene_camera_orig.json`):
+```bash
+for d in data/ycbv/fixed_drift/*/; do
+    scene=$(basename $d)
+    cp $BOP_PATH/ycbv/test/$scene/scene_camera.json $BOP_PATH/ycbv/test/$scene/scene_camera_orig.json
+    cp $d/scene_camera.json $BOP_PATH/ycbv/test/$scene/scene_camera.json
+done
+```
+
 ## Running Alignpose<a name="alignpose"></a>
 Currently we support BOP datasets from BOP-Industrial track (ITODD-MV, XYZ-IBD, IPD) and selected datasets from BOP-Classic track (YCB-V, T-LESS).
 
