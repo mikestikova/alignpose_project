@@ -157,3 +157,11 @@ This repository relies heavily on the following works:
 - [BOP Toolkit](https://github.com/thodan/bop_toolkit) -  Evaluation scripts, standard utils
 - [FoundPose](https://github.com/facebookresearch/foundpose) - Single-view pose estimation, utils
 - [Pixloc](https://github.com/cvg/pixloc) - Featuremetric refinement
+
+## License <a name="license"></a>
+
+The code in this repository is released under the [MIT License](LICENSE), with the following exceptions:
+- `foundpose/` and the files adapted from [FoundPose](https://github.com/facebookresearch/foundpose) (`src/scripts/gen_repre.py`, `src/scripts/gen_templates.py`, `src/utils_multiview/opts.py`) are licensed under [CC BY-NC 4.0](foundpose/LICENSE).
+- The submodules in `src/external/` ([BOP Toolkit](https://github.com/thodan/bop_toolkit), [DINOv2](https://github.com/facebookresearch/dinov2), [Pixloc](https://github.com/cvg/pixloc)) are distributed under their own licenses.
+
+Note that the full pipeline depends on the FoundPose code, so running it is subject to the non-commercial terms of CC BY-NC 4.0.
