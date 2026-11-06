@@ -23,19 +23,14 @@
   <img src="images/alignpose_pipeline.png" width=80% alt="AlignPose pipeline overview" max-width=20px>
 </p>
 
-This repository contains code for AlignPose, our method for 6 object pose estimation from multiple views. It provides a pipeline to run multi-view featuremetric refinement for [BOP](https://bop.felk.cvut.cz/) datasets.
+This repository contains code for AlignPose, our method for 6 object pose estimation from multiple views. This branch is for running AlignPose on your own objects, cameras and images. To reproduce the results on [BOP](https://bop.felk.cvut.cz/) datasets from the paper, see the `master` branch.
 
 ## Table of Contents
 
 - [Environment setup](#setup)
-- [Running Alignpose for BOP](#alignpose_bop)
-   - [Dataset](#dataset)
-   - [Generate templates](#templates)
-   - [Generate representations](#representations)
-   - [Single view poses](#single_view_poses)
-   - [Multi view refinement](#multi_view_poses)
-   - [BOP evaluation](#bop-evaluation)
 - [Running Alignpose for custom objects](#alignpose_custom)
+   - [Full pose estimation](#custom_full)
+   - [Multi-view refinement only](#custom_refine)
 - [Acknowledgements](#acknowledgements)
 - [License](#license)
 
@@ -77,75 +72,56 @@ Activate the conda environment:
 conda activate alignpose_gpu
 ```
 
-## Reproducing Alignpose for BOP datasets<a name="alignpose_bop"></a>
-Currently we support BOP datasets from BOP-Industrial track (ITODD-MV, XYZ-IBD, IPD) and selected datasets from BOP-Classic track (YCB-V, T-LESS).
-
-### Dataset <a name="dataset"></a>
-Download the BOP datasets from [here](https://bop.felk.cvut.cz/datasets/). 
-Note that we only need the `base` archive with the dataset info, `models` folder and `test` folder. Extract dataset to this [format.](https://github.com/thodan/bop_toolkit/blob/master/docs/bop_datasets_format.md)
-
-In addition to the test images, this method needs a specification of which views shoud be used together in the multi-view setup:
-- BOP Industrial (IPD, XYZIBD, ITODDMV) contain `test_targets_multiview_bop25.json` file.
-- BOP Classic Core (YCBV, TLESS) do not contain this file so we provide it in `data/bop_test_targets/{dataset}/test_targets_multiview_bop25.json`. These files were generated for 4-view setup.  
-
-#### Fixing YCB-V camera poses
-The camera poses (`cam_R_w2c`, `cam_t_w2c`) in the YCB-V test split are not consistent with the ground-truth object poses: although the objects are static, their poses expressed in the world frame drift over time. Since multi-view refinement relies on the relative camera poses, these need to be fixed before running AlignPose on YCB-V.
-
-Recompute the camera poses by assuming the objects are static (object world poses are taken from the first frame of each scene). The fixed `scene_camera.json` files are saved to `data/ycbv/fixed_drift/{scene_id}/`; the original dataset is not modified:
-```bash
-python src/scripts/fix_ycbv_drift.py --bop-test-dir $BOP_PATH/ycbv/test --out-dir data/ycbv/fixed_drift
-```
-
-Then replace the original camera files in the dataset with the fixed ones (the originals are kept as `scene_camera_orig.json`):
-```bash
-for d in data/ycbv/fixed_drift/*/; do
-    scene=$(basename $d)
-    cp $BOP_PATH/ycbv/test/$scene/scene_camera.json $BOP_PATH/ycbv/test/$scene/scene_camera_orig.json
-    cp $d/scene_camera.json $BOP_PATH/ycbv/test/$scene/scene_camera.json
-done
-```
-
-### Generate templates <a name="templates"></a>
-Specify your configs in `src/configs/gen_templates/ycbv.json` and run the template generation:
-```bash
-python src/scripts/gen_templates.py --opts-path src/configs/gen_templates/ycbv.json
-```
-
-### Generate object representation <a name="representations"></a>
-Specify your configs in  `src/configs/gen_repre/ycbv.json` and generate PCA per-object representation:
-```bash
-python src/scripts/gen_repre.py --opts-path src/configs/gen_repre/ycbv.json
-```
-
-### Prepare input pose estimates <a name="single_view_poses"></a>
-Because this is a refinemet method, we need some coarse input poses that will be refined. We provide sample input poses in the `data/inputs` folder. Alternatively, you may download input poses `.csv` files from [BOP Leaderboard](https://bop.felk.cvut.cz/leaderboards/pose-estimation-unseen-bop23/ycb-v/) or generate them with any single-view pose estimation method.
-
-Format of input:
-- BOP Classic Core (YCB-V, T-LESS): One `.csv` file with predictions in BOP format.
-- BOP Industrial (IPD, XYZIBD, ITODDMV): Folder containing a `.csv` files with predictions for all of the cameras named `{camera_id}-xxxx_{dataset-name}-test.csv`.
-
-
-### Run multi-view refinement <a name="multi_view_poses"></a>
-Run multi-view refinement using the following script and configuration. The output will be one `.csv` file in BOP format for each camera. 
-`configs/refine/ycbv.json`
-```bash
-python src/scripts/refine_multiview.py --opts-path src/configs/refine_multiview/ycbv.json
-```
-
-
-### BOP Evaluation <a name="bop-evaluation"></a>
-Evaluate the BOP submission file by running this script.
-```
-python src/scripts/results_evaluate_bop.py --csv_path  path/to/csv/results.csv
-```
-
-
-
 ## Running Alignpose for custom objects <a name="alignpose_custom"></a>
-This section describes how to run AlignPose on your own objects, without depending on BOP datasets.
+This section describes how to run AlignPose on your own objects, cameras and images, without depending on BOP datasets. There are two ways to use it:
+- [Full pose estimation](#custom_full): you have images, calibrated cameras and detection masks of the objects. FoundPose estimates a pose in each view, and the multi-view refinement combines the views.
+- [Multi-view refinement only](#custom_refine): you already have initial poses (e.g. from another single-view method) and want to refine them using all views.
 
-### Preprocess objects
-Each object needs a preprocessed representation. Object IDs must be unique.
+### Full pose estimation (FoundPose + multi-view refinement) <a name="custom_full"></a>
+
+#### 1. Build the object representations
+Each object needs preprocessing: we render templates of the object from multiple viewpoints, then extract features from them to build the object representation. Render the templates with your camera intrinsics at your working distance from the object:
+```bash
+python src/scripts/preprocess_objects_foundpose.py \
+    --model-paths path/to/models/obj_000001.ply path/to/models/obj_000002.ply \
+    --object-ids 1 2 \
+    --camera path/to/camera.json \
+    --distance 600 \
+    --output-dir object_repre/custom_dataset/foundpose_v1
+```
+- `--camera` is a `.json` or `.yml` file with `fx`, `fy`, `cx`, `cy`, `width` and `height` (or a BOP-style `cam_K`).
+- `--distance` is the camera-object distance in mm.
+- `--ssaa-factor` (default 4) renders the templates at a higher resolution for anti-aliasing. For large camera images (e.g. 5 MP), use `--ssaa-factor 1` to keep the rendering size manageable.
+- `--save-templates` also saves the rendered templates to `<output-dir>/<object-id>/templates/` (`rgb/`, `depth/` in mm, `mask/` and `cameras.json`), e.g. to check what the templates look like. The template numbers match the template ids in the representation.
+
+Each representation is saved to `<output-dir>/<object-id>/repre.pth`, with the options used in `config.json`. With the default settings (798 templates), building one takes about 15–30 minutes on a GPU and the file is about 0.5 GB.
+
+To debug the template generation, you can run the two steps separately from Python and inspect the templates before extracting the features:
+```python
+from src.utils_multiview.processing.foundpose_repre import (
+    build_foundpose_repre, foundpose_repre_config, load_intrinsics,
+    render_foundpose_templates, save_foundpose_repre, save_templates,
+)
+
+model_path = "path/to/my_object.ply"
+K, image_size = load_intrinsics("path/to/camera.json")
+depth_range = (600, 600)  # camera-object distance in mm
+
+templates = render_foundpose_templates(model_path, K, image_size, depth_range)
+save_templates(templates, "debug/templates")  # optional, for debugging
+repre = build_foundpose_repre(templates)
+
+config = foundpose_repre_config(model_path, K, image_size, depth_range)
+save_foundpose_repre(repre, "object_repre/custom_dataset/foundpose_v1", object_id=1, config=config)
+```
+
+#### 2. Run pose estimation
+Coming soon!
+
+### Multi-view refinement only <a name="custom_refine"></a>
+
+#### 1. Preprocess the objects
+The multi-view refinement needs only the PCA of each object's features, which is faster to compute than the full representation. (A full FoundPose representation from the section above works as well.) Object IDs must be unique.
 ```bash
 python src/scripts/preprocess_objects.py \
     --model-paths path/to/models/obj_000001.ply path/to/models/obj_000002.ply \
@@ -162,10 +138,8 @@ repre, config = fit_object_pca("path/to/my_object.ply")
 save_object_pca(repre, "object_repre/custom_dataset/repre_v1", object_id=1, config=config)
 ```
 
-### Run multi-view refinement
-Comming soon!
-
-
+#### 2. Run multi-view refinement
+Coming soon!
 
 
 ## Citation
