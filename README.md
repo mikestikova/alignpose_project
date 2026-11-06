@@ -27,16 +27,18 @@ This repository contains code for AlignPose, our method for 6 object pose estima
 
 ## Table of Contents
 
-- [Setup](#setup)
-   - [Environment](#environment)
+- [Environment setup](#setup)
+- [Running Alignpose for BOP](#alignpose_bop)
    - [Dataset](#dataset)
-- [Running Alignpose](#alignpose)
+   - [Generate templates](#templates)
+   - [Generate representations](#representations)
+   - [Single view poses](#single_view_poses)
+   - [Multi view refinement](#multi_view_poses)
+   - [BOP evaluation](#bop-evaluation)
 - [Acknowledgements](#acknowledgements)
 - [License](#license)
 
-## Setup <a name="setup"></a>
-
-### Environment <a name="environment"></a>
+## Environment setup <a name="setup"></a>
 
 Download the code with the git submodules and navigate to the folder:
 
@@ -74,6 +76,9 @@ Activate the conda environment:
 conda activate alignpose_gpu
 ```
 
+## Reproducing Alignpose for BOP datasets<a name="alignpose_bop"></a>
+Currently we support BOP datasets from BOP-Industrial track (ITODD-MV, XYZ-IBD, IPD) and selected datasets from BOP-Classic track (YCB-V, T-LESS).
+
 ### Dataset <a name="dataset"></a>
 Download the BOP datasets from [here](https://bop.felk.cvut.cz/datasets/). 
 Note that we only need the `base` archive with the dataset info, `models` folder and `test` folder. Extract dataset to this [format.](https://github.com/thodan/bop_toolkit/blob/master/docs/bop_datasets_format.md)
@@ -99,22 +104,19 @@ for d in data/ycbv/fixed_drift/*/; do
 done
 ```
 
-## Running Alignpose<a name="alignpose"></a>
-Currently we support BOP datasets from BOP-Industrial track (ITODD-MV, XYZ-IBD, IPD) and selected datasets from BOP-Classic track (YCB-V, T-LESS).
-
-### Generate templates:
+### Generate templates <a name="templates"></a>
 Specify your configs in `src/configs/gen_templates/ycbv.json` and run the template generation:
 ```bash
 python src/scripts/gen_templates.py --opts-path src/configs/gen_templates/ycbv.json
 ```
 
-### Generate obejct representation
+### Generate object representation <a name="representations"></a>
 Specify your configs in  `src/configs/gen_repre/ycbv.json` and generate PCA per-object representation:
 ```bash
 python src/scripts/gen_repre.py --opts-path src/configs/gen_repre/ycbv.json
 ```
 
-### Prepare input pose estimates
+### Prepare input pose estimates <a name="single_view_poses"></a>
 Because this is a refinemet method, we need some coarse input poses that will be refined. We provide sample input poses in the `data/inputs` folder. Alternatively, you may download input poses `.csv` files from [BOP Leaderboard](https://bop.felk.cvut.cz/leaderboards/pose-estimation-unseen-bop23/ycb-v/) or generate them with any single-view pose estimation method.
 
 Format of input:
@@ -122,7 +124,7 @@ Format of input:
 - BOP Industrial (IPD, XYZIBD, ITODDMV): Folder containing a `.csv` files with predictions for all of the cameras named `{camera_id}-xxxx_{dataset-name}-test.csv`.
 
 
-### Run multi-view refinement 
+### Run multi-view refinement <a name="multi_view_poses"></a>
 Run multi-view refinement using the following script and configuration. The output will be one `.csv` file in BOP format for each camera. 
 `configs/refine/ycbv.json`
 ```bash
@@ -133,8 +135,9 @@ python src/scripts/refine_multiview.py --opts-path src/configs/refine_multiview/
 ### BOP Evaluation <a name="bop-evaluation"></a>
 Evaluate the BOP submission file by running this script.
 ```
-python src/scripts/results_bop_evaluate.py --csv_path  path/to/csv/results.csv
+python src/scripts/results_evaluate_bop.py --csv_path  path/to/csv/results.csv
 ```
+
 
 ## Citation
 If you find this code useful in your research, please cite:

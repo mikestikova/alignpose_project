@@ -1,5 +1,11 @@
 from typing import Any, Dict, List, NamedTuple, Optional, Tuple
 
+# Feature extractor used in all our configs. The PCA must be fitted with the same extractor
+# that is used for the refinement.
+DEFAULT_EXTRACTOR_NAME = (
+    "dinov2_version=vitl14-reg_stride=14_facet=token_layer=18_logbin=0_norm=1"
+)
+
 
 class GenTemplatesOpts(NamedTuple):
     """Options that can be specified via the command line."""
@@ -37,7 +43,7 @@ class GenRepreOpts(NamedTuple):
     object_lids: Optional[List[int]] = None
 
     # Feature extraction options.
-    extractor_name: str = "dinov2_vits14_reg"
+    extractor_name: str = DEFAULT_EXTRACTOR_NAME
     grid_cell_size: float = 14.0
 
     # Feature PCA options.
@@ -61,7 +67,7 @@ class RefineOpts(NamedTuple):
     path_to_models: Optional[str] = None  # Path template to the object models, e.g. `path/to/models/{obj_id}.ply`
 
     # Feature extraction & cropping.
-    extractor_name: str = "dinov2_vitl14"
+    extractor_name: str = DEFAULT_EXTRACTOR_NAME
     grid_cell_size: float = 14.0
     crop_size: Tuple[int, int] = (420, 420)
     crop_rel_pad: float = 0.2
