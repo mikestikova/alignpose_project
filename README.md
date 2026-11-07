@@ -87,33 +87,15 @@ python src/scripts/preprocess_objects_foundpose.py \
     --object-ids 1 2 \
     --camera path/to/camera.json \
     --distance 600 \
-    --output-dir object_repre/custom_dataset/foundpose_v1
+    --output-dir /path/to/object_repre/foundpose
 ```
+- `--output-dir` is where the representations are saved. Choose a folder outside this repository.
 - `--camera` is a `.json` or `.yml` file with `fx`, `fy`, `cx`, `cy`, `width` and `height` (or a BOP-style `cam_K`).
 - `--distance` is the camera-object distance in mm.
 - `--ssaa-factor` (default 4) renders the templates at a higher resolution for anti-aliasing. For large camera images (e.g. 5 MP), use `--ssaa-factor 1` to keep the rendering size manageable.
-- `--save-templates` also saves the rendered templates to `<output-dir>/<object-id>/templates/` (`rgb/`, `depth/` in mm, `mask/` and `cameras.json`), e.g. to check what the templates look like. The template numbers match the template ids in the representation.
+- `--save-templates` also saves the rendered templates to `<output-dir>/<object-id>/templates/` (`rgb/`, `depth/` in mm, `mask/` and `cameras.json`). Use it to debug the template generation, e.g. to check that the object is centered and at the right scale. The template numbers match the template ids in the representation.
 
 Each representation is saved to `<output-dir>/<object-id>/repre.pth`, with the options used in `config.json`. With the default settings (798 templates), building one takes about 15–30 minutes on a GPU and the file is about 0.5 GB.
-
-To debug the template generation, you can run the two steps separately from Python and inspect the templates before extracting the features:
-```python
-from src.utils_multiview.processing.foundpose_repre import (
-    build_foundpose_repre, foundpose_repre_config, load_intrinsics,
-    render_foundpose_templates, save_foundpose_repre, save_templates,
-)
-
-model_path = "path/to/my_object.ply"
-K, image_size = load_intrinsics("path/to/camera.json")
-depth_range = (600, 600)  # camera-object distance in mm
-
-templates = render_foundpose_templates(model_path, K, image_size, depth_range)
-save_templates(templates, "debug/templates")  # optional, for debugging
-repre = build_foundpose_repre(templates)
-
-config = foundpose_repre_config(model_path, K, image_size, depth_range)
-save_foundpose_repre(repre, "object_repre/custom_dataset/foundpose_v1", object_id=1, config=config)
-```
 
 #### 2. Run pose estimation
 Coming soon!
@@ -126,17 +108,9 @@ The multi-view refinement needs only the PCA of each object's features, which is
 python src/scripts/preprocess_objects.py \
     --model-paths path/to/models/obj_000001.ply path/to/models/obj_000002.ply \
     --object-ids 1 2 \
-    --output-dir object_repre/custom_dataset/repre_v1
+    --output-dir /path/to/object_repre/pca
 ```
-Each representation is saved to `<output-dir>/<object-id>/repre.pth`. To use the representations in `refine_multiview.py`, save them to `object_repre/<object_dataset>/<repre_version>` and set `repre_version` in the refinement config to match.
-
-You can do the same from Python:
-```python
-from src.utils_multiview.processing.object_pca import fit_object_pca, save_object_pca
-
-repre, config = fit_object_pca("path/to/my_object.ply")
-save_object_pca(repre, "object_repre/custom_dataset/repre_v1", object_id=1, config=config)
-```
+Choose an `--output-dir` outside this repository. Each representation is saved to `<output-dir>/<object-id>/repre.pth`, with the options used in `config.json`.
 
 #### 2. Run multi-view refinement
 Coming soon!
